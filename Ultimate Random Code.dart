@@ -2,6 +2,7 @@
  * @author Kashikizu
  * Concept date: 23/03/2024 (dd/mm/yyyy)
  * File Creation Date: 27/03/2024
+ * Update Date: 28/03/2024 - Fixed Dice Code, Removed Roulette Code, Added future cases in UnivCalc
  * Initial Completion Date: ??/??/2024
  */
 
@@ -9,7 +10,7 @@ import 'dart:math';
 
 void main() {
   UnivCalc start = UnivCalc();
-  int roll = start.rand() % 4;
+  int roll = start.rand() % 3;
   switch (roll) {
     case 0:
       {
@@ -24,15 +25,6 @@ void main() {
       }
       break;
     case 2:
-      {
-        /*
-  ChaoticRussianRoulette crr = ChaoticRussianRoulette();
-  crr;
-  */
-        print("Not available for now");
-      }
-      break;
-    case 3:
       {
         ColorGen cg = ColorGen();
         cg;
@@ -69,6 +61,7 @@ class CoinCalc extends UnivCalc {
 
   //Checks and calls percentage
   void stats(int h, t, f) {
+    double perc = 0;
     if (h == t) {
       if (h == 0) {
         print("No coins were flipped");
@@ -76,177 +69,177 @@ class CoinCalc extends UnivCalc {
         print("Both faces were flipped 50% of the time");
       }
     } else if (h > t) {
-      percCalc(h, f, "Heads");
+      perc = percCalc(h, f);
+      print("Most flipped side is Heads");
+      print("Heads was flipped $h times");
+      print("Heads was flipped $perc% of the time");
     } else {
-      percCalc(t, f, "Tails");
+      perc = percCalc(t, f);
+      print("Most flipped side is Tails");
+      print("Heads was flipped $t times");
+      print("Heads was flipped $perc% of the time");
     }
-  }
-
-  //Calculating statistics
-  void percCalc(int face, flips, String faceName) {
-    double percFace = (face / flips) * 100;
-    double percRound = double.parse(percFace.toStringAsFixed(2));
-    print("Most flipped side is $faceName");
-    print("$faceName was flipped $face times");
-    print("$faceName was flipped $percRound% of the time");
   }
 }
 
-//Dice has problem with 6
 class Dice {
-  //Rolls dices
+  //Rolls dice
   Dice() {
     Roll d = Roll();
     d.ocd();
   }
 }
 
-//The dice that is rolled
-class Roll extends DiceRoll {
-  //Main method for rolling the dice
+class Roll extends DiceCalc {
   Roll() {
-    int rolls = gen();
-    print("Number of dices rolled: $rolls");
-    roll(rolls);
-  }
-}
+    List<int> sides = [0, 0, 0, 0, 0, 0]; //Frequency of sides of the dice
 
-class DiceRoll extends DiceCalc {
-  DiceRoll() {}
-
-  //Rolls the random amount of die
-  void roll(int n) {
-    //Counter for further calculations
-    List<int> sides = [0, 0, 0, 0, 0, 0];
-
-    for (int i = 0; i < n; i++) {
-      //Tracks dice roll number
-      int ser = i + 1;
-      int rolled = rand() % 6;
-      //Determines the result
-      switch (rolled) {
-        case 0:
-          {
-            sides[0]++;
-            print("Dice #$ser rolled a 1");
-          }
-          break;
-        case 1:
-          {
-            sides[1]++;
-            print("Dice #$ser rolled a 2");
-          }
-          break;
-        case 2:
-          {
-            sides[2]++;
-            print("Dice #$ser rolled a 3");
-          }
-          break;
-        case 3:
-          {
-            sides[3]++;
-            print("Dice #$ser rolled a 4");
-          }
-          break;
-        case 4:
-          {
-            sides[4]++;
-            print("Dice #$ser rolled a 5");
-          }
-          break;
-        case 5:
-          {
-            sides[5];
-            print("Dice #$ser rolled a 6");
-          }
-        default:
-          {
-            print("");
-          }
-          break;
+    int n = gen(); //Determines the roll amount
+    if (n == 0) {
+      print("No dice was rolled");
+    } else {
+      print("Dice was rolled $n times");
+      for (int i = 0; i < n; i++) {
+        int roll = rand() % 6; //Rolling for the result
+        int s = i + 1;
+        //Result display
+        switch (roll) {
+          case 0:
+            {
+              sides[roll] = res(sides[roll], s, roll);
+            }
+            break;
+          case 1:
+            {
+              sides[roll] = res(sides[roll], s, roll);
+            }
+            break;
+          case 2:
+            {
+              sides[roll] = res(sides[roll], s, roll);
+            }
+            break;
+          case 3:
+            {
+              sides[roll] = res(sides[roll], s, roll);
+            }
+            break;
+          case 4:
+            {
+              sides[roll] = res(sides[roll], s, roll);
+            }
+            break;
+          case 5:
+            {
+              sides[roll] = res(sides[roll], s, roll);
+            }
+            break;
+          default:
+            {
+              print(roll);
+              print(sides[roll]);
+            }
+        }
       }
+      List<int> sides2 = [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]; //Another dice to copy the result to
+      diceCopy(sides, sides2); //Copies dice results
+      List<int> freq = [
+        0,
+        0
+      ]; //Tracking the frequency of highest and lowest side
+      int high = diceHigh(sides2, freq); //Gets highest side
+      int low = diceLow(sides2, freq); //Gets lowest side
+      int max = diceMax(sides2); //Gets most frequent side
+      ocd();
+      mostRolled(sides, max, n); //Prints most frequent side stats
+      typeRolled(
+          sides, high, freq[0], n, "Highest"); //Prints highest side stats
+      typeRolled(sides, low, freq[1], n, "Lowest"); //Prints lowest side stats
+      ocd();
     }
-    ocd();
-    //Finding the statistics of the results
-    mostRolled(sides, n);
-    highestRolled(sides, n);
-    lowestRolled(sides, n);
   }
 }
 
 class DiceCalc extends UnivCalc {
   DiceCalc() {}
 
-  //For finding the most rolled
-  void mostRolled(List<int> sides, int n) {
-    if (n == 0) {
-      print("No dice was rolled");
-    } else {
-      print("Most rolled side(s): ");
-      int mostFreq = sides.reduce(max);
-      if (mostFreq == 1) {
-        print("All sides were rolled equal number of times");
-      } else {
-        for (int i = 0; i < 6; i++) {
-          if (mostFreq == sides[i]) {
-            print(i + 1);
-          }
-        }
-        double percSide = statCalc(mostFreq, n);
-        print("Rolled $percSide% of the times");
+  //Easier result printing
+  int res(int side, s, roll) {
+    side++;
+    print("Dice #$s rolled a ${roll + 1}");
+    return side;
+  }
+
+  //Gets most frequent side
+  int diceMax(List<int> dice) {
+    int max = 0;
+    dice.sort();
+    max = dice[5];
+    return max;
+  }
+
+  //Copies dice results
+  void diceCopy(List<int> side, side2) {
+    for (int i = 0; i < 6; i++) {
+      side2[i] = side[i];
+    }
+  }
+
+  //Gets highest side
+  int diceHigh(List<int> side2, freq) {
+    int high = 0;
+    for (int i = 5; i > 0; i--) {
+      if (side2[i] != 0) {
+        high = i + 1;
+        freq[0] = side2[i];
+        break;
       }
     }
+    return high;
+  }
+
+  //Gets lowest side
+  int diceLow(List<int> side2, freq) {
+    int low = 0;
+    for (int i = 0; i < 6; i++) {
+      if (side2[i] != 0) {
+        low = i + 1;
+        freq[1] = side2[i];
+        break;
+      }
+    }
+    return low;
+  }
+
+  //Prints most frequent side stats
+  void mostRolled(List<int> dice, int max, n) {
+    print("Most Rolled Side(s)");
+    for (int i = 0; i < 6; i++) {
+      if (max == dice[i]) {
+        print(i + 1);
+      }
+    }
+    print("Rolled $max times");
+    double times = percCalc(max, n); //Calculates statistics
+    print("Rolled $times% of the times");
     ocd();
   }
 
-  //For finding the highest rolled
-  void highestRolled(List<int> sides, int n) {
-    if (n == 0) {
-      return;
-    } else {
-      print("Highest rolled side: ");
-      int highestFreq = 0;
-      for (int i = 5; i > 0; i--) {
-        if (sides[i] != 0) {
-          highestFreq = i + 1;
-          break;
-        }
-      }
-      print(highestFreq);
-      int iteration = sides[highestFreq - 1];
-      double percSide = statCalc(iteration, n);
-      print("Rolled $percSide% of the times");
-    }
+  //Prints extreme side stats
+  void typeRolled(List<int> dice, int est, freq, n, String type) {
+    print("$type Rolled Side:");
+    print(est);
+    double times = percCalc(freq, n); //Calculates statistics
+    print("Rolled $freq times");
+    print("Rolled $times% of the times");
     ocd();
-  }
-
-  //For finding the lowest rolled
-  void lowestRolled(List<int> sides, int n) {
-    if (n == 0) {
-      return;
-    } else {
-      print("Lowest rolled side: ");
-      int lowestFreq = 0;
-      for (int i = 0; i < 6; i++) {
-        if (sides[i] != 0) {
-          lowestFreq = i + 1;
-          break;
-        }
-      }
-      print(lowestFreq);
-      int iteration = sides[lowestFreq - 1];
-      double percSide = statCalc(iteration, n);
-      print("Rolled $percSide% of the times");
-    }
-    ocd();
-  }
-
-  //Stat calculator
-  double statCalc(int outcome, total) {
-    double perc = (outcome / total) * 100;
-    double percRound = double.parse(perc.toStringAsFixed(2));
-    return percRound;
   }
 }
 
@@ -408,84 +401,6 @@ class Calc extends Keyword {
   }
 }
 
-//Roulette is broken, fix later
-/*
-class ChaoticRussianRoulette {
-  //Starts the game
-  ChaoticRussianRoulette() {
-    RussianRoulette fire = RussianRoulette();
-    fire.ocd();
-  }
-}
-
-
-class RussianRoulette extends Game {
-  RussianRoulette() {
-    //Determines a random slot
-    int bullet = rand() % 6, lifeCheck = 1;
-    print("Gun was loaded");
-    ocd();
-    //Inserts the bullet in a random slot
-    slots[bullet] = 1;
-    //Main Game
-    lifeCheck = shoot(slots, lifeCheck);
-    //Gives a realistic slot value instead of list index
-    bullet++;
-    print("Bullet was in slot number $bullet");
-    if (lifeCheck == 1) {
-      print("You made it out alive");
-    } else {
-      print("You lost");
-    }
-  }
-}
-
-class Game extends Revolver {
-  Game() {}
-
-  //Main Game
-  int shoot(List<int> gun, int lifeCheck) {
-    //Determines a random number of shots that will be taken
-    int attempt = rand();
-    if (attempt == 0) {
-      print("You were not brave enough to shoot");
-      ocd();
-    } else {
-      print("Gun was decided to be fired ${attempt + 1} times");
-      ocd();
-      //Checks the shot
-      flip(3, attempt, result);
-      for (int i = 0; i <= attempt; i++) {
-        int slot = i + 1;
-        print("Shot #$slot fired...");
-        if (gun[i] == 1) {
-          print("It had the bullet. Better luck next time!");
-          lifeCheck = 0;
-          ocd();
-          break;
-        } else {
-          print("It was empty");
-          ocd();
-        }
-      }
-    }
-    return lifeCheck;
-  }
-
-  void result(String a, int s) {
-    print("Shot #$s fired...");
-    print(a);
-  }
-}
-
-class Revolver extends UnivCalc {
-  //Gun
-  List<int> slots = [0, 0, 0, 0, 0, 0];
-
-  Revolver() {}
-}
-*/
-
 class UnivCalc {
   int heads = 0, tails = 0;
 
@@ -510,36 +425,28 @@ class UnivCalc {
               tails++;
             }
           }
-          break;
         }
+        break;
       case 1: //dice
         {
-          break;
           //Not much to do I think
         }
+        break;
       case 2: //color
-        {
-          break;
-        }
+        {}
+        break;
       case 3: //roulette
-        {
-          /*for (int i = 0; i <= n; i++) {
-            s = i + 1;
-            a = "It had the bullet. Better luck next time!";
-            b = "It was empty";
-            if (gun?[i] == 1) {
-              //print();
-              func(a, s);
-              lifeCheck = 0;
-              ocd();
-              break;
-            } else {
-              //print();
-              ocd();
-            }
-          }*/
-          break;
-        }
+        {}
+        break;
+      case 4: //name generator
+        {}
+        break;
+      case 5: //deck of cards
+        {}
+        break;
+      case 6: //Gacha
+        {}
+        break;
       default:
         {
           print("placeholder");
@@ -549,17 +456,26 @@ class UnivCalc {
 
   void univRoll(int n) {}
 
+  //Calculates % stats
+  double percCalc(int f, n) {
+    double percFace = (f / n) * 100;
+    double percRound = double.parse(percFace.toStringAsFixed(2));
+    return percRound;
+  }
+
+  //Returns a random number
   int rand() {
     int value = Random().nextInt(6969);
     return value;
   }
 
-  void ocd() {
-    print("");
-  }
-
+  //Returns a random number between 10; Used for determining loop numbers
   int gen() {
     int value = Random().nextInt(10);
     return value;
+  }
+
+  void ocd() {
+    print("");
   }
 }
