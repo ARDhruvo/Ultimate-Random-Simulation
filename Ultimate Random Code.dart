@@ -3,15 +3,15 @@
  * Concept date: 23/03/2024 (dd/mm/yyyy)
  * File Creation Date: 27/03/2024
  * Update Date: 28/03/2024 - Fixed Dice Code, Removed Roulette Code, Added future cases in UnivCalc
- * Update Date: 31/03/2024 - Added Name Generator and Chaotic Russian Roulette; Added banana();
- * Initial Completion Date: ??/??/2024
+ * Update Date: 31/03/2024 - Added Name Generator and Chaotic Russian Roulette; Added banana(); Added Card Gen and Rickroll
+ * Initial Completion Date: 31/03/2024
  */
 
 import 'dart:math';
 
 void main() {
   UnivCalc start = UnivCalc();
-  int roll = start.rand() % 5;
+  int roll = start.rand() % 7;
   switch (roll) {
     case 0:
       {
@@ -42,20 +42,30 @@ void main() {
         ChaosRussianRoulette crr = ChaosRussianRoulette();
         crr;
       }
+      break;
+    case 5:
+      {
+        CardGen cd = CardGen();
+        cd;
+      }
+      break;
+    default:
+      {
+        print("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+      }
   }
 }
 
 class CoinFlip {
   //flips coin
   CoinFlip() {
+    print("COIN FLIP");
     Coin c = Coin();
     c.ocd();
   }
 }
 
 class Coin extends CoinCalc {
-  //int heads = 0, tails = 0; //Counter variables for stats
-  //Coin flip
   Coin() {
     int f = gen(); //ramdom number of coins flipped
     print("Number of coins flipped: $f");
@@ -99,6 +109,7 @@ class CoinCalc extends UnivCalc {
 class Dice {
   //Rolls dice
   Dice() {
+    print("DICE ROLL");
     Roll d = Roll();
     d.ocd();
   }
@@ -261,6 +272,7 @@ class DiceCalc extends UnivCalc {
 class ColorGen extends UnivCalc {
   //gens random color
   ColorGen() {
+    print("COLOR GENERATOR");
     Color c = Color();
     c.ocd();
   }
@@ -351,6 +363,7 @@ https://hobbylark.com/writing/cool-last-names
 
 class NameGen {
   NameGen() {
+    print("NAME GENERATOR");
     Generator gen = Generator(); //Starts generating names
     gen.ocd();
   }
@@ -490,6 +503,254 @@ class NameCalc extends Keyword {
   void nameStats(String type, int f, n) {
     double freq = percCalc(f, n);
     print("$type type of name was generated $freq% of the time");
+  }
+}
+
+class Calc extends Keyword {
+  //Constructor
+  Calc() {}
+
+  //Returns ones place in Hexadecimal
+  int hexDigit1(int n) {
+    return n % 16;
+  }
+
+  //Returns tens place in Hexadecimal
+  int hexDigit2(int n) {
+    int v = (n ~/ 16) % 16;
+    return v;
+  }
+
+  //Conversion to suitable form
+  int colorPercent(int c) {
+    double val = (c / 255) * 100;
+    int nc = val.toInt();
+    return nc;
+  }
+
+  //Alt to MAX method
+  int maxValue(int r, g, b) {
+    int max;
+    if (r > g) {
+      if (r > b) {
+        max = r;
+      } else {
+        max = b;
+      }
+    } else {
+      if (g > b) {
+        max = g;
+      } else {
+        max = b;
+      }
+    }
+    return max;
+  }
+
+  //Returns K or Black Value
+  int kValue(int r, g, b) {
+    int m = maxValue(r, g, b);
+    int k = 100 - m;
+    return k;
+  }
+
+  //Returns C, M or Y or Cyan, Magenta or Yellow Value
+  int cmyValue(int n, k) {
+    double v = (((100 - n - k) / (100 - k))) * 100;
+    int percent = v.toInt();
+    return percent;
+  }
+}
+
+class ChaosRussianRoulette {
+  ChaosRussianRoulette() {
+    print("RUSSIAN ROULETTE");
+    Revolver r = Revolver();
+    r.ocd();
+  }
+}
+
+class Revolver extends GunCalc {
+  Revolver() {
+    var gun = [0, 0, 0, 0, 0, 0];
+    loadGun(gun);
+    shootGun(gun);
+    if (lifeCheck == 0) {
+      print("You lost...");
+    } else {
+      print("You won!");
+    }
+    checkGun(gun);
+  }
+}
+
+class GunCalc extends UnivCalc {
+  GunCalc() {}
+
+  void loadGun(var list) {
+    int bullets = univRoll(6);
+    int dropped = 0;
+    print("$bullets bullets were taken");
+    for (int i = 1; i <= bullets; i++) {
+      int slots = univRoll(6);
+      if (list[slots] != 0) {
+        dropped++;
+      } else {
+        list[slots]++;
+      }
+    }
+    if (dropped != 0) {
+      print("$dropped bullets were dropped");
+    }
+    print("${bullets - dropped} bullets were loaded");
+    ocd();
+  }
+
+  void shootGun(var list) {
+    int pull = univRoll(6);
+    if (pull == 0) {
+      print("No shots were fired");
+    } else {
+      print("There will be $pull shots fired");
+      ocd();
+      for (int i = 1; i <= pull; i++) {
+        int slots = univRoll(6);
+        print("Slot ${slots + 1} was fired");
+        if (list[slots] != 0) {
+          print("There was a bullet");
+          lifeCheck = 0;
+          break;
+        } else {
+          print("There wasnt any bullet");
+        }
+      }
+    }
+    ocd();
+  }
+
+  void checkGun(var list) {
+    ocd();
+    print("Bullets were in slot(s):");
+    for (int i = 0; i < list.length; i++) {
+      if (list[i] != 0) {
+        print(i + 1);
+      }
+    }
+  }
+}
+
+class CardGen {
+  CardGen() {
+    print("CARD DRAW");
+    Deck d = Deck();
+    d.ocd();
+  }
+}
+
+class Deck extends CardCalc {
+  Deck() {
+    int n = univRoll(13); //Determines the number of cards to be drawn
+    if (n == 0) {
+      print("No cards was drawn");
+      banana();
+    } else {
+      print("$n cards will be drawn");
+      ocd();
+
+      draw(n); //Draws the cards
+
+      print("Among the cards drawn:");
+      ocd();
+      cardCount(); //Shows the most drawn suit
+      cardStats(n); //Gives stats about the drawn cards
+    }
+  }
+}
+
+class CardCalc extends Keyword {
+  CardCalc() {}
+
+  //Draws cards
+  void draw(int n) {
+    for (int i = 0; i < n; i++) {
+      int draw = univRoll(52);
+      int ser = i + 1;
+      hand[i] = draw;
+      for (int j = i - 1; j >= 0; j--) {
+        if (hand[i] == hand[j]) {
+          draw = univRoll(52);
+          hand[i] = draw;
+        }
+      }
+      print("Card #$ser: ${cards[draw]}");
+      suitsCounter(draw); //Keeps track of suits
+    }
+    ocd();
+  }
+
+  void suitsCounter(int draw) {
+    if (draw <= 12) {
+      suits[0]++;
+    } else if (draw <= 25) {
+      suits[1]++;
+    } else if (draw <= 38) {
+      suits[2]++;
+    } else {
+      suits[3]++;
+    }
+
+    //For face cards
+    if ((draw >= 0 && draw <= 3) ||
+        (draw >= 13 && draw <= 16) ||
+        (draw >= 26 && draw <= 29) ||
+        (draw >= 39 && draw <= 42)) {
+      suits[4]++;
+    }
+  }
+
+  void cardCount() {
+    var sort = [0, 0, 0, 0];
+    for (int i = 0; i < 4; i++) {
+      sort[i] = suits[i];
+    }
+    sort.sort();
+    if (sort[3] == sort[0]) {
+      print("All suits were drawn equally");
+    } else {
+      print("Most drawn suit(s):");
+      for (int i = 0; i < 4; i++) {
+        if (sort[3] == suits[i]) {
+          print(suitsName[i]);
+        }
+      }
+    }
+    ocd();
+  }
+
+  //Statistics of the drawn cards
+  void cardStats(int n) {
+    for (int i = 0; i < 4; i++) {
+      if (suits[i] != 0) {
+        print("${suitsName[i]} was drawn ${suits[i]} times");
+        double percHand = percCalc(suits[i], n);
+        print("Which comprises $percHand% of cards drawn");
+        double percSuits = percCalc(suits[i], 13);
+        print("$percSuits% of cards the suit");
+        double percDeck = percCalc(suits[i], 52);
+        print("$percDeck% of cards in deck");
+        ocd();
+      }
+    }
+    if (suits[4] != 0) {
+      print("Number of Face Cards: ${suits[4]}");
+      double percHand = percCalc(suits[4], n);
+      print("Which comprises $percHand% of cards drawn");
+      double percFace = percCalc(suits[4], 12);
+      print("$percFace% of Face Cards");
+      double percDeck = percCalc(suits[4], 52);
+      print("$percDeck% of cards in deck");
+      ocd();
+    }
   }
 }
 
@@ -922,140 +1183,63 @@ class Keyword extends UnivCalc {
     30: 'Arrington'
   };
 
+  var cards = [
+    'Ace of Spades',
+    'King of Spades',
+    'Queen of Spades',
+    'Jack of Spades',
+    '10 of Spades',
+    '9 of Spades',
+    '8 of Spades',
+    '7 of Spades',
+    '6 of Spades',
+    '5 of Spades',
+    '4 of Spades',
+    '3 of Spades',
+    '2 of Spades',
+    'Ace of Hearts',
+    'King of Hearts',
+    'Queen of Hearts',
+    'Jack of Hearts',
+    '10 of Hearts',
+    '9 of Hearts',
+    '8 of Hearts',
+    '7 of Hearts',
+    '6 of Hearts',
+    '5 of Hearts',
+    '4 of Hearts',
+    '3 of Hearts',
+    '2 of Hearts',
+    'Ace of Clubs',
+    'King of Clubs',
+    'Queen of Clubs',
+    'Jack of Clubs',
+    '10 of Clubs',
+    '9 of Clubs',
+    '8 of Clubs',
+    '7 of Clubs',
+    '6 of Clubs',
+    '5 of Clubs',
+    '4 of Clubs',
+    '3 of Clubs',
+    '2 of Clubs',
+    'Ace of Diamond',
+    'King of Diamond',
+    'Queen of Diamond',
+    'Jack of Diamond',
+    '10 of Diamond',
+    '9 of Diamond',
+    '8 of Diamond',
+    '7 of Diamond',
+    '6 of Diamond',
+    '5 of Diamond',
+    '4 of Diamond',
+    '3 of Diamond',
+    '2 of Diamond'
+  ];
+
   //Contructor
   Keyword() {}
-}
-
-class Calc extends Keyword {
-  //Constructor
-  Calc() {}
-
-  //Returns ones place in Hexadecimal
-  int hexDigit1(int n) {
-    return n % 16;
-  }
-
-  //Returns tens place in Hexadecimal
-  int hexDigit2(int n) {
-    int v = (n ~/ 16) % 16;
-    return v;
-  }
-
-  //Conversion to suitable form
-  int colorPercent(int c) {
-    double val = (c / 255) * 100;
-    int nc = val.toInt();
-    return nc;
-  }
-
-  //Alt to MAX method
-  int maxValue(int r, g, b) {
-    int max;
-    if (r > g) {
-      if (r > b) {
-        max = r;
-      } else {
-        max = b;
-      }
-    } else {
-      if (g > b) {
-        max = g;
-      } else {
-        max = b;
-      }
-    }
-    return max;
-  }
-
-  //Returns K or Black Value
-  int kValue(int r, g, b) {
-    int m = maxValue(r, g, b);
-    int k = 100 - m;
-    return k;
-  }
-
-  //Returns C, M or Y or Cyan, Magenta or Yellow Value
-  int cmyValue(int n, k) {
-    double v = (((100 - n - k) / (100 - k))) * 100;
-    int percent = v.toInt();
-    return percent;
-  }
-}
-
-class ChaosRussianRoulette {
-  ChaosRussianRoulette() {
-    Revolver r = Revolver();
-    r.ocd();
-  }
-}
-
-class Revolver extends GunCalc {
-  Revolver() {
-    var gun = [0, 0, 0, 0, 0, 0];
-    loadGun(gun);
-    shootGun(gun);
-    if (lifeCheck == 0) {
-      print("You lost...");
-    } else {
-      print("You won!");
-    }
-    checkGun(gun);
-  }
-}
-
-class GunCalc extends UnivCalc {
-  GunCalc() {}
-
-  void loadGun(var list) {
-    int bullets = univRoll(6);
-    int dropped = 0;
-    print("$bullets bullets were taken");
-    for (int i = 1; i <= bullets; i++) {
-      int slots = univRoll(6);
-      if (list[slots] != 0) {
-        dropped++;
-      } else {
-        list[slots]++;
-      }
-    }
-    if (dropped != 0) {
-      print("$dropped bullets were dropped");
-    }
-    print("${bullets - dropped} bullets were loaded");
-    ocd();
-  }
-
-  void shootGun(var list) {
-    int pull = univRoll(6);
-    if (pull == 0) {
-      print("No shots were fired");
-    } else {
-      print("There will be $pull shots fired");
-      ocd();
-      for (int i = 1; i <= pull; i++) {
-        int slots = univRoll(6);
-        print("Slot ${slots + 1} was fired");
-        if (list[slots] != 0) {
-          print("There was a bullet");
-          lifeCheck = 0;
-          break;
-        } else {
-          print("There wasnt any bullet");
-        }
-      }
-    }
-    ocd();
-  }
-
-  void checkGun(var list) {
-    ocd();
-    print("Bullets were in slot(s):");
-    for (int i = 0; i < list.length; i++) {
-      if (list[i] != 0) {
-        print(i + 1);
-      }
-    }
-  }
 }
 
 class UnivCalc {
@@ -1063,7 +1247,13 @@ class UnivCalc {
 
   int mas = 0, fem = 0;
   List<int> genre = [0, 0, 0, 0, 0];
+
   int lifeCheck = 1;
+
+  var hand = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
+  var suits = [0, 0, 0, 0, 0],
+      suitsName = ['Spades', 'Hearts', 'Clubs', 'Diamonds'];
+
   UnivCalc() {}
 
   void banana() {
